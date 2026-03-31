@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Real-time Chat App</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Login/Register Screen -->
+    <div id="authScreen" class="auth-screen">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1><i class="fas fa-comments"></i> Chat App</h1>
+                <p>Connect with friends in real-time</p>
+            </div>
+            
+            <div class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" minlength="3" maxlength="20" required>
+                </div>
+                <button id="loginBtn" class="auth-btn">
+                    <i class="fas fa-sign-in-alt"></i> Start Chatting
+                </button>
+            </div>
+            
+            <div class="auth-footer">
+                <p>Just enter a username to start chatting!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Screen -->
+    <div id="chatScreen" class="chat-screen hidden">
+        <!-- Header -->
+        <header class="chat-header">
+            <div class="header-left">
+                <!-- Mobile Menu Toggle -->
+                <button id="mobileMenuToggle" class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1><i class="fas fa-comments"></i> Chat App</h1>
+            </div>
+            <div class="header-right">
+                <button id="darkModeToggle" class="icon-btn" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="logoutBtn" class="icon-btn" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <main class="chat-main">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-tabs">
+                    <button class="tab-btn active" data-tab="online"><i class="fas fa-users"></i> Online</button>
+                    <button class="tab-btn" data-tab="friends"><i class="fas fa-user-friends"></i> Friends</button>
+                    <button class="tab-btn" data-tab="search"><i class="fas fa-search"></i> Find</button>
+                </div>
+                
+                <!-- Online Users Tab -->
+                <div id="onlineTab" class="tab-content active">
+                    <div class="sidebar-header">
+                        <h3><i class="fas fa-users"></i> Online Users</h3>
+                        <span id="onlineCount">0</span>
+                    </div>
+                    <div id="usersList" class="users-list">
+                        <!-- Online users will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Friends Tab -->
+                <div id="friendsTab" class="tab-content">
+                    <div class="sidebar-header">
+                        <h3><i class="fas fa-user-friends"></i> Friends</h3>
+                        <span id="friendsCount">0</span>
+                    </div>
+                    <div id="friendsList" class="users-list">
+                        <!-- Friends will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Search Tab -->
+                <div id="searchTab" class="tab-content">
+                    <div class="sidebar-header">
+                        <h3><i class="fas fa-search"></i> Find Users</h3>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" id="searchInput" placeholder="Search users...">
+                        <div id="searchResults" class="search-results">
+                            <!-- Search results will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Friend Requests -->
+                <div class="friend-requests-container">
+                    <div class="sidebar-header">
+                        <h3><i class="fas fa-envelope"></i> Requests</h3>
+                        <span id="requestsCount" class="badge hidden">0</span>
+                    </div>
+                    <div id="friendRequests" class="friend-requests">
+                        <!-- Friend requests will be populated here -->
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Chat Area -->
+            <section class="chat-area">
+                <div class="chat-header-info">
+                    <div class="current-chat-info">
+                        <span id="currentChatUser">Select a user to start chatting</span>
+                        <span id="typingIndicator" class="typing-indicator hidden"></span>
+                    </div>
+                    <div class="call-controls">
+                        <button id="voiceCallBtn" class="call-btn" title="Voice Call" disabled>
+                            <i class="fas fa-phone"></i>
+                        </button>
+                        <button id="videoCallBtn" class="call-btn" title="Video Call" disabled>
+                            <i class="fas fa-video"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="messagesContainer" class="messages-container">
+                    <!-- Messages will be populated here -->
+                    <div class="welcome-message">
+                        <i class="fas fa-comments"></i>
+                        <h3>Welcome to Chat App!</h3>
+                        <p>Select an online user from the sidebar to start chatting.</p>
+                    </div>
+                </div>
+
+                <div class="message-input-container">
+                    <div class="input-group">
+                        <input type="text" id="messageInput" placeholder="Type a message..." disabled>
+                        <label for="fileInput" class="file-input-btn" title="Upload Image or Video">
+                            <i class="fas fa-paperclip"></i>
+                        </label>
+                        <input type="file" id="fileInput" accept="image/*,video/*" style="display: none;">
+                        <button id="sendBtn" class="send-btn" disabled>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Call Modal -->
+    <div id="callModal" class="modal hidden">
+        <div class="call-modal-content">
+            <div class="call-header">
+                <h3 id="callTitle">Incoming Call</h3>
+                <span id="callStatus">Ringing...</span>
+            </div>
+            <div class="call-content">
+                <div class="call-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="call-info">
+                    <div id="callUser">Unknown</div>
+                    <div id="callType">Voice Call</div>
+                    <div id="callTimer">00:00</div>
+                </div>
+            </div>
+            <div class="call-controls">
+                <button id="acceptCallBtn" class="call-control-btn accept">
+                    <i class="fas fa-phone"></i>
+                </button>
+                <button id="rejectCallBtn" class="call-control-btn reject">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+                <button id="endCallBtn" class="call-control-btn end hidden">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+            </div>
+            <div class="call-video-container hidden">
+                <video id="localVideo" autoplay muted></video>
+                <video id="remoteVideo" autoplay></video>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Overlay -->
+    <div id="mobileOverlay" class="mobile-overlay"></div>
+
+    <!-- Media Preview Modal -->
+    <div id="mediaModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="mediaPreview"></div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/mobile-debug.js"></script>
+</body>
+</html>

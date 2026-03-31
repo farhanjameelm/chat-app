@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Environment variables with fallbacks
-const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/chatapp';
+const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://abeer070225_db_user:abeer070225_db_user@cluster0.qvwfhvr.mongodb.net/';
 const sessionSecret = process.env.SESSION_SECRET || 'your-secret-key-here';
 
 // Session middleware

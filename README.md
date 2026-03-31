@@ -147,7 +147,7 @@ The application will be available at `http://localhost:3000`
 3. **Navigate Tabs**: Use the sidebar tabs to switch between Online Users, Friends, and Search
 4. **Add Friends**: Use the Search tab to find and send friend requests
 5. **Manage Requests**: Accept or reject friend requests in the Requests section
-6. **Start Chatting**: Click on any online user or friend to begin a conversation
+6. **Happy Chatting! 🚀**: Click on any online user or friend to begin a conversation
 
 ### Features in Action
 
@@ -280,6 +280,109 @@ Error: listen EADDRINUSE :::3000
 3. Make your changes
 4. Test thoroughly
 5. Submit a pull request
+
+## Deployment
+
+### Environment Setup
+
+1. **Copy Environment Variables**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Configure Environment Variables**
+   Edit `.env` file with your settings:
+   ```env
+   # MongoDB Connection String
+   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/chatapp
+   
+   # Session Secret (generate a random string)
+   SESSION_SECRET=your-secure-secret-key
+   
+   # Server Port
+   PORT=3000
+   
+   # Environment
+   NODE_ENV=production
+   ```
+
+### Deployment Options
+
+#### 1. Heroku
+```bash
+# Install Heroku CLI
+# Login to Heroku
+heroku login
+
+# Create app
+heroku create your-app-name
+
+# Set environment variables
+heroku config:set MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/chatapp
+heroku config:set SESSION_SECRET=your-secure-secret-key
+heroku config:set NODE_ENV=production
+
+# Deploy
+git push heroku main
+```
+
+#### 2. Vercel
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel --prod
+```
+
+#### 3. Railway
+```bash
+# Install Railway CLI
+npm i -g @railway/cli
+
+# Login
+railway login
+
+# Deploy
+railway up
+```
+
+#### 4. DigitalOcean App Platform
+1. Create a new app on DigitalOcean
+2. Connect your GitHub repository
+3. Set environment variables in the app settings
+4. Deploy
+
+### MongoDB Setup
+
+#### MongoDB Atlas (Recommended)
+1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+2. Create a free cluster
+3. Get your connection string
+4. Add your IP to the whitelist
+5. Set the connection string in your environment variables
+
+#### Local MongoDB
+```bash
+# Install MongoDB locally
+# On macOS
+brew install mongodb-community
+
+# On Ubuntu
+sudo apt-get install mongodb
+
+# Start MongoDB
+sudo systemctl start mongod
+```
+
+### Production Checklist
+
+- [ ] Set `NODE_ENV=production`
+- [ ] Use a secure `SESSION_SECRET`
+- [ ] Configure production MongoDB URI
+- [ ] Set up HTTPS (handled by most hosting platforms)
+- [ ] Monitor application logs
+- [ ] Set up backup for MongoDB
 
 ## License
 

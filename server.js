@@ -29,18 +29,31 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Environment variables with fallbacks
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/chatapp';
+const sessionSecret = process.env.SESSION_SECRET || 'your-secret-key-here';
+
 // Session middleware
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
 }));
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('MongoDB connection error:', err));
+console.log('Connecting to MongoDB...');
+
+mongoose.connect(mongoUri)
+    .then(() => {
+        console.log('Connected to MongoDB successfully');
+        console.log('MongoDB URI:', mongoUri.includes('localhost') ? 'Local MongoDB' : 'Remote MongoDB');
+    })
+    .catch(err => {
+        console.error('MongoDB connection error:', err);
+        console.error('MongoDB URI being used:', mongoUri);
+        process.exit(1); // Exit if MongoDB connection fails
+    });
 
 // Routes
 app.use('/api/auth', authRoutes);

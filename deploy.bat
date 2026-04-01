@@ -48,9 +48,10 @@ echo 🎯 Choose deployment platform:
 echo 1) Heroku
 echo 2) Vercel
 echo 3) Railway
-echo 4) Local production server
+echo 4) Render (Recommended - includes Redis)
+echo 5) Local production server
 echo.
-set /p choice="Enter choice (1-4): "
+set /p choice="Enter choice (1-5): "
 
 if "%choice%"=="1" (
     echo 🔧 Deploying to Heroku...
@@ -120,6 +121,23 @@ if "%choice%"=="3" (
 )
 
 if "%choice%"=="4" (
+    echo 🔧 Deploying to Render (Recommended)...
+    echo 📝 Render setup instructions:
+    echo 1. Go to https://render.com
+    echo 2. Click 'New +' and select 'Web Service'
+    echo 3. Connect your GitHub repository
+    echo 4. Set environment variables:
+    echo    - NODE_ENV=production
+    echo    - MONGODB_URI=%MONGO_URI%
+    echo    - SESSION_SECRET=%SESSION_SECRET_VALUE%
+    echo    - REDIS_URL=redis://your-redis-instance:6379
+    echo 5. Add Redis addon (Render has built-in Redis)
+    echo 6. Deploy! Render will automatically detect and use Redis
+    echo.
+    echo 🔗 Render URL: https://dashboard.render.com
+)
+
+if "%choice%"=="5" (
     echo 🔧 Starting local production server...
     echo ⚠️  Make sure MongoDB is running locally or update MONGODB_URI in .env
     

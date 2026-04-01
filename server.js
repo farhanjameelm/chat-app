@@ -7,6 +7,10 @@ const session = require('express-session');
 const cors = require('cors');
 const path = require('path');
 
+// Redis session store for production
+const RedisStore = require('connect-redis')(session);
+const redis = require('redis');
+
 const authRoutes = require('./routes/auth');
 const uploadRoutes = require('./routes/upload');
 const friendRoutes = require('./routes/friends');
@@ -33,13 +37,31 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://abeer070225_db_user:abeer070225_db_user@cluster0.qvwfhvr.mongodb.net/';
 const sessionSecret = process.env.SESSION_SECRET || 'your-secret-key-here';
 
-// Session middleware
-app.use(session({
+// Session middleware with Redis for production
+const sessionConfig = {
     secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
-}));
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production', 
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+};
+
+// Use Redis for production, memory store for development
+if (process.env.NODE_ENV === 'production' && process.env.REDIS_URL) {
+    const redisClient = redis.createClient({
+        url: process.env.REDIS_URL,
+        legacyMode: true
+    });
+    
+    sessionConfig.store = new RedisStore({ client: redisClient });
+    console.log('🔴 Using Redis session store for production');
+} else {
+    console.log('🟡 Using memory session store for development');
+}
+
+app.use(session(sessionConfig));
 
 // Database connection
 console.log('Connecting to MongoDB...');

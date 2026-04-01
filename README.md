@@ -347,7 +347,26 @@ railway login
 railway up
 ```
 
-#### 4. DigitalOcean App Platform
+#### 4. Render (Recommended)
+```bash
+# Render has built-in Redis support - no extra setup needed!
+
+# Manual Setup:
+1. Go to [Render](https://render.com)
+2. Click 'New +' and select 'Web Service'
+3. Connect your GitHub repository
+4. Set environment variables:
+   - NODE_ENV=production
+   - MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/chatapp
+   - SESSION_SECRET=your-secure-secret-key
+5. Add Redis addon (Render has built-in Redis)
+6. Deploy!
+
+# Automatic Setup:
+./deploy.sh  # Choose option 4 for Render
+```
+
+#### 5. DigitalOcean App Platform
 1. Create a new app on DigitalOcean
 2. Connect your GitHub repository
 3. Set environment variables in the app settings

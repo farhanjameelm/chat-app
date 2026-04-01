@@ -44,9 +44,10 @@ echo "🎯 Choose deployment platform:"
 echo "1) Heroku"
 echo "2) Vercel"
 echo "3) Railway"
-echo "4) Local production server"
+echo "4) Render (Recommended - includes Redis)"
+echo "5) Local production server"
 echo ""
-read -p "Enter choice (1-4): " choice
+read -p "Enter choice (1-5): " choice
 
 case $choice in
     1)
@@ -66,6 +67,11 @@ case $choice in
         heroku config:set NODE_ENV=production
         heroku config:set MONGODB_URI=$(grep MONGODB_URI .env | cut -d '=' -f2)
         heroku config:set SESSION_SECRET=$(grep SESSION_SECRET .env | cut -d '=' -f2)
+        
+        # Add Redis for session storage
+        echo "🔴 Adding Redis addon for session storage..."
+        heroku addons:create heroku-redis:hobby-dev -a $(heroku info -s | grep "===" | cut -d ' ' -f2)
+        heroku config:set REDIS_URL=$(heroku config:get REDIS_URL)
         
         echo "🚀 Deploying to Heroku..."
         git push heroku main
@@ -107,6 +113,23 @@ case $choice in
         ;;
         
     4)
+        echo "🔧 Deploying to Render (Recommended)..."
+        echo "📝 Render setup instructions:"
+        echo "1. Go to https://render.com"
+        echo "2. Click 'New +' and select 'Web Service'"
+        echo "3. Connect your GitHub repository"
+        echo "4. Set environment variables:"
+        echo "   - NODE_ENV=production"
+        echo "   - MONGODB_URI=$(grep MONGODB_URI .env | cut -d '=' -f2)"
+        echo "   - SESSION_SECRET=$(grep SESSION_SECRET .env | cut -d '=' -f2)"
+        echo "   - REDIS_URL=redis://your-redis-instance:6379"
+        echo "5. Add Redis addon (Render has built-in Redis)"
+        echo "6. Deploy! Render will automatically detect and use Redis"
+        echo ""
+        echo "🔗 Render URL: https://dashboard.render.com"
+        ;;
+        
+    5)
         echo "🔧 Starting local production server..."
         echo "⚠️  Make sure MongoDB is running locally or update MONGODB_URI in .env"
         

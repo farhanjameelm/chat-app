@@ -30,12 +30,11 @@ const io = socketIo(server, {
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Environment variables with fallbacks
 const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://abeer070225_db_user:abeer070225_db_user@cluster0.qvwfhvr.mongodb.net/';
-const sessionSecret = process.env.SESSION_SECRET || 'your-secret-key-here';
+const sessionSecret = process.env.SESSION_SECRET || 'eV3yb3n7Zfruf+5HZmeywKOxKtY+szY2nsBHLJ88kiI=';
 
 // Session middleware with Redis for production
 const sessionConfig = {

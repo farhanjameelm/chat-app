@@ -1,0 +1,26 @@
+services:
+  # Web Service
+  - type: web
+    name: chat-app
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: PORT
+        value: 3000
+
+  # Redis Service (for session storage)
+  - type: redis
+    name: chat-redis
+    plan: free
+    ipAllowList: []  # Allows connections from web service

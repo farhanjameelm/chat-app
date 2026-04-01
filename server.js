@@ -82,6 +82,15 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/friends', friendRoutes);
 app.use('/api/calls', callRoutes);
 
+// Health check endpoint for Render
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime()
+    });
+});
+
 // Serve main HTML file
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));

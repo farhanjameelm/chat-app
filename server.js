@@ -8,8 +8,22 @@ const cors = require('cors');
 const path = require('path');
 
 // Redis session store for production
-const RedisStore = require('connect-redis')(session);
-const redis = require('redis');
+let RedisStore;
+let redis;
+
+// Only require Redis packages if REDIS_URL is available
+if (process.env.REDIS_URL) {
+    try {
+        redis = require('redis');
+        RedisStore = require('connect-redis')(session);
+        console.log('🔴 Redis packages loaded successfully');
+    } catch (error) {
+        console.error('❌ Failed to load Redis packages:', error.message);
+        console.log('🟡 Falling back to memory session store');
+    }
+} else {
+    console.log('🟡 REDIS_URL not found, using memory session store');
+}
 
 const authRoutes = require('./routes/auth');
 const uploadRoutes = require('./routes/upload');
@@ -48,14 +62,19 @@ const sessionConfig = {
 };
 
 // Use Redis for production, memory store for development
-if (process.env.NODE_ENV === 'production' && process.env.REDIS_URL) {
-    const redisClient = redis.createClient({
-        url: process.env.REDIS_URL,
-        legacyMode: true
-    });
-    
-    sessionConfig.store = new RedisStore({ client: redisClient });
-    console.log('🔴 Using Redis session store for production');
+if (process.env.REDIS_URL && RedisStore && redis) {
+    try {
+        const redisClient = redis.createClient({
+            url: process.env.REDIS_URL,
+            legacyMode: true
+        });
+        
+        sessionConfig.store = new RedisStore({ client: redisClient });
+        console.log('🔴 Using Redis session store for production');
+    } catch (error) {
+        console.error('❌ Redis connection failed:', error.message);
+        console.log('🟡 Falling back to memory session store');
+    }
 } else {
     console.log('🟡 Using memory session store for development');
 }
